@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host Controls — KBC FFF</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="host-body">
+
+  <!-- SCREEN 1: Setup -->
+  <div id="host-setup" class="screen active">
+    <h1>🎮 Host Controls</h1>
+    <p>Google Sheets માંથી પ્રશ્નો લોડ કરો</p>
+    <button id="btn-load-questions">📊 Load Questions from Sheet</button>
+    <p id="load-status" class="muted"></p>
+    <div id="load-success" class="hidden">
+      <p>✅ <span id="q-count">0</span> questions loaded
+         (<span id="round-count">0</span> rounds of 5)</p>
+      <button id="btn-go-round1" class="btn-green">🚀 Round 1 શરૂ કરો</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Round Control -->
+  <div id="host-round" class="screen">
+    <div id="host-top-bar">
+      <span id="host-round-label">Round 1 of 2</span>
+      <span id="host-player-count">👥 0 joined</span>
+    </div>
+
+    <div id="host-questions-preview">
+      <div class="host-q-row"><span class="hq-num">Q1.</span><span id="hq-0"></span><span class="hq-ans" id="hq-ans-0"></span></div>
+      <div class="host-q-row"><span class="hq-num">Q2.</span><span id="hq-1"></span><span class="hq-ans" id="hq-ans-1"></span></div>
+      <div class="host-q-row"><span class="hq-num">Q3.</span><span id="hq-2"></span><span class="hq-ans" id="hq-ans-2"></span></div>
+      <div class="host-q-row"><span class="hq-num">Q4.</span><span id="hq-3"></span><span class="hq-ans" id="hq-ans-3"></span></div>
+      <div class="host-q-row"><span class="hq-num">Q5.</span><span id="hq-4"></span><span class="hq-ans" id="hq-ans-4"></span></div>
+    </div>
+
+    <div id="live-submissions">
+      <h3>⚡ Submissions (Live)</h3>
+      <div id="submissions-list"></div>
+    </div>
+
+    <div id="host-controls">
+      <button id="btn-start-round"    class="btn-green">▶ Start Round</button>
+      <button id="btn-reveal-answers" class="btn-blue hidden">✅ Reveal Answers</button>
+      <button id="btn-next-round"     class="btn-orange hidden">→ Next Round</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Game Over -->
+  <div id="host-gameover" class="screen">
+    <h2>🏁 Game Over!</h2>
+    <div id="final-leaderboard"></div>
+    <button id="btn-new-game">🔄 New Game</button>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/host.js"></script>
+</body>
+</html>

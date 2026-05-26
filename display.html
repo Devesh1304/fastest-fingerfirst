@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Display — KBC FFF</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="display-body">
+
+  <!-- SCREEN 1: Waiting -->
+  <div id="disp-waiting" class="screen active">
+    <h1>🎯 KBC Fastest Finger First</h1>
+    <p class="disp-sub">Host ની રાહ જુઓ...</p>
+    <div id="disp-player-list"></div>
+  </div>
+
+  <!-- SCREEN 2: Live Questions -->
+  <div id="disp-questions" class="screen">
+    <div id="disp-top-bar">
+      <span id="disp-round-label">Round 1</span>
+      <span id="disp-timer" class="disp-timer">⏱ 30s</span>
+      <span id="disp-submitted-count">0 submitted</span>
+    </div>
+    <div id="disp-q-grid">
+      <div class="disp-q-block"><span class="disp-q-num">Q1</span><span id="dq-text-0" class="disp-q-text"></span></div>
+      <div class="disp-q-block"><span class="disp-q-num">Q2</span><span id="dq-text-1" class="disp-q-text"></span></div>
+      <div class="disp-q-block"><span class="disp-q-num">Q3</span><span id="dq-text-2" class="disp-q-text"></span></div>
+      <div class="disp-q-block"><span class="disp-q-num">Q4</span><span id="dq-text-3" class="disp-q-text"></span></div>
+      <div class="disp-q-block"><span class="disp-q-num">Q5</span><span id="dq-text-4" class="disp-q-text"></span></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Reveal Answers + Winner -->
+  <div id="disp-reveal" class="screen">
+    <h2>✅ સાચા જવાબ</h2>
+    <div id="disp-answers-list">
+      <div class="disp-answer-row"><span class="disp-q-num">Q1</span><span id="da-0"></span></div>
+      <div class="disp-answer-row"><span class="disp-q-num">Q2</span><span id="da-1"></span></div>
+      <div class="disp-answer-row"><span class="disp-q-num">Q3</span><span id="da-2"></span></div>
+      <div class="disp-answer-row"><span class="disp-q-num">Q4</span><span id="da-3"></span></div>
+      <div class="disp-answer-row"><span class="disp-q-num">Q5</span><span id="da-4"></span></div>
+    </div>
+    <div id="disp-winner-box">
+      <p class="winner-label">🏆 Fastest Correct!</p>
+      <p id="disp-winner-name"  class="winner-name"></p>
+      <p id="disp-winner-score" class="winner-score"></p>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Leaderboard -->
+  <div id="disp-leaderboard" class="screen">
+    <h2>🏆 Leaderboard</h2>
+    <div id="disp-scores"></div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

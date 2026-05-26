@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KBC Fastest Finger First</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- SCREEN 1: Enter Name -->
+  <div id="screen-join" class="screen active">
+    <h1>🎯 Fastest Finger First</h1>
+    <p>તમારું નામ દાખલ કરો</p>
+    <input type="text" id="player-name" placeholder="તમારું નામ..." maxlength="20" />
+    <button id="btn-join">Game માં Join કરો →</button>
+    <p id="join-error" class="error hidden">કૃપા કરીને નામ દાખલ કરો</p>
+  </div>
+
+  <!-- SCREEN 2: Waiting Room -->
+  <div id="screen-waiting" class="screen">
+    <div class="big-emoji">👋</div>
+    <h2 id="display-name"></h2>
+    <p>Host ની રાહ જુઓ...</p>
+    <div class="spinner"></div>
+    <p id="player-count">👥 0 players joined</p>
+  </div>
+
+  <!-- SCREEN 3: 5 Questions -->
+  <div id="screen-questions" class="screen">
+    <div id="top-bar">
+      <span id="round-label">Round 1</span>
+      <span id="timer-display">⏱ 30s</span>
+    </div>
+
+    <div id="questions-list">
+
+      <!-- Q1 -->
+      <div class="q-block" id="q-block-0">
+        <p class="q-text"><span class="q-num">Q1.</span><span id="q-text-0"></span></p>
+        <div class="q-options">
+          <button class="opt-btn" data-q="0" data-i="0">A. <span id="q0-opt0"></span></button>
+          <button class="opt-btn" data-q="0" data-i="1">B. <span id="q0-opt1"></span></button>
+          <button class="opt-btn" data-q="0" data-i="2">C. <span id="q0-opt2"></span></button>
+          <button class="opt-btn" data-q="0" data-i="3">D. <span id="q0-opt3"></span></button>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q-block" id="q-block-1">
+        <p class="q-text"><span class="q-num">Q2.</span><span id="q-text-1"></span></p>
+        <div class="q-options">
+          <button class="opt-btn" data-q="1" data-i="0">A. <span id="q1-opt0"></span></button>
+          <button class="opt-btn" data-q="1" data-i="1">B. <span id="q1-opt1"></span></button>
+          <button class="opt-btn" data-q="1" data-i="2">C. <span id="q1-opt2"></span></button>
+          <button class="opt-btn" data-q="1" data-i="3">D. <span id="q1-opt3"></span></button>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q-block" id="q-block-2">
+        <p class="q-text"><span class="q-num">Q3.</span><span id="q-text-2"></span></p>
+        <div class="q-options">
+          <button class="opt-btn" data-q="2" data-i="0">A. <span id="q2-opt0"></span></button>
+          <button class="opt-btn" data-q="2" data-i="1">B. <span id="q2-opt1"></span></button>
+          <button class="opt-btn" data-q="2" data-i="2">C. <span id="q2-opt2"></span></button>
+          <button class="opt-btn" data-q="2" data-i="3">D. <span id="q2-opt3"></span></button>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q-block" id="q-block-3">
+        <p class="q-text"><span class="q-num">Q4.</span><span id="q-text-3"></span></p>
+        <div class="q-options">
+          <button class="opt-btn" data-q="3" data-i="0">A. <span id="q3-opt0"></span></button>
+          <button class="opt-btn" data-q="3" data-i="1">B. <span id="q3-opt1"></span></button>
+          <button class="opt-btn" data-q="3" data-i="2">C. <span id="q3-opt2"></span></button>
+          <button class="opt-btn" data-q="3" data-i="3">D. <span id="q3-opt3"></span></button>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q-block" id="q-block-4">
+        <p class="q-text"><span class="q-num">Q5.</span><span id="q-text-4"></span></p>
+        <div class="q-options">
+          <button class="opt-btn" data-q="4" data-i="0">A. <span id="q4-opt0"></span></button>
+          <button class="opt-btn" data-q="4" data-i="1">B. <span id="q4-opt1"></span></button>
+          <button class="opt-btn" data-q="4" data-i="2">C. <span id="q4-opt2"></span></button>
+          <button class="opt-btn" data-q="4" data-i="3">D. <span id="q4-opt3"></span></button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="submit-bar">
+      <p id="answered-count">0 / 5 answered</p>
+      <button id="btn-submit" disabled>🚀 SUBMIT</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Submitted -->
+  <div id="screen-submitted" class="screen">
+    <div class="big-emoji">🚀</div>
+    <h2>Submit થઈ ગયું!</h2>
+    <p id="submit-time-label" class="time-label"></p>
+    <p class="muted">બીજા players ની રાહ જુઓ...</p>
+    <div class="spinner"></div>
+  </div>
+
+  <!-- SCREEN 5: Leaderboard -->
+  <div id="screen-result" class="screen">
+    <h2>🏆 Results</h2>
+    <div id="leaderboard-list"></div>
+    <p id="result-status" class="muted">Host ની રાહ જુઓ...</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>
