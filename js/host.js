@@ -29,6 +29,23 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Round adjuster (+ / −) during game
+  document.getElementById('btn-rounds-inc').addEventListener('click', function () {
+    if (_selectedRounds < _hostTotalRounds) {
+      _selectedRounds++;
+      _updateAdjuster();
+      gameRef.update({ totalRounds: _selectedRounds });
+    }
+  });
+
+  document.getElementById('btn-rounds-dec').addEventListener('click', function () {
+    if (_selectedRounds > _hostRound) {   // can't go below current round
+      _selectedRounds--;
+      _updateAdjuster();
+      gameRef.update({ totalRounds: _selectedRounds });
+    }
+  });
+
   // Round control
   document.getElementById('btn-start-round')    .addEventListener('click', hostStartRound);
   document.getElementById('btn-reveal-answers') .addEventListener('click', hostRevealAnswers);
@@ -81,6 +98,28 @@ async function hostLoadQuestions() {
     '(' + allQuestions.length + ' questions available — max ' + _hostTotalRounds + ' rounds)';
 }
 
+
+// ── Update round adjuster display ────────────────────
+function _updateAdjuster() {
+  var val = document.getElementById('adj-rounds-val');
+  if (val) val.textContent = _selectedRounds;
+
+  // Disable − if already at current round, disable + if at max
+  var dec = document.getElementById('btn-rounds-dec');
+  var inc = document.getElementById('btn-rounds-inc');
+  if (dec) dec.disabled = (_selectedRounds <= _hostRound);
+  if (inc) inc.disabled = (_selectedRounds >= _hostTotalRounds);
+
+  // Update round label
+  var lbl = document.getElementById('host-round-label');
+  if (lbl) lbl.textContent = 'Round ' + _hostRound + ' of ' + _selectedRounds;
+
+  // Update Next Round button text
+  var nxt = document.getElementById('btn-next-round');
+  if (nxt && !nxt.classList.contains('hidden')) {
+    nxt.textContent = _hostRound >= _selectedRounds ? '🏁 Game Over' : '→ Next Round';
+  }
+}
 
 // ── Select how many rounds to play ───────────────────
 function _selectRounds(r) {
@@ -144,6 +183,9 @@ function _showHostRoundScreen() {
   document.getElementById('btn-next-round')    .classList.add('hidden');
   document.getElementById('btn-next-round')    .textContent = '→ Next Round';
   document.getElementById('submissions-list')  .innerHTML   = '';
+
+  // Sync adjuster
+  _updateAdjuster();
 
   // Recovery buttons — both visible but redo disabled until round starts
   document.getElementById('btn-redo-round').disabled = true;

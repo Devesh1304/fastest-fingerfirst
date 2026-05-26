@@ -8,9 +8,13 @@
 </head>
 <body class="host-body">
 
+  <!-- Fixed Logo Header -->
+  <div id="top-logo-bar">
+    <img src="kbc.png" alt="KBC Logo" class="kbc-logo-top" />
+  </div>
+
   <!-- SCREEN 1: Setup -->
   <div id="host-setup" class="screen active">
-    <img src="kbc.png" alt="KBC Logo" class="kbc-logo" />
     <h1>🎮 Host Controls</h1>
     <p>Google Sheets માંથી પ્રશ્નો લોડ કરો</p>
     <button id="btn-load-questions">📊 Load Questions from Sheet</button>
@@ -45,6 +49,16 @@
     <div id="host-top-bar">
       <span id="host-round-label">Round 1 of 2</span>
       <span id="host-player-count">👥 0 joined</span>
+    </div>
+
+    <!-- Round adjuster — add/remove rounds during game -->
+    <div id="round-adjuster">
+      <span class="adj-label">Total Rounds:</span>
+      <div class="adj-controls">
+        <button id="btn-rounds-dec" class="adj-btn">−</button>
+        <span id="adj-rounds-val">2</span>
+        <button id="btn-rounds-inc" class="adj-btn">+</button>
+      </div>
     </div>
 
     <div id="host-questions-preview">

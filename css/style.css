@@ -11,32 +11,43 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 16px 16px 100px;
+  padding: 86px 16px 100px; /* 86px top = logo bar height */
 }
 
 /* ══════════════════════════════
-   KBC Logo
+   Fixed Top Logo Bar
 ══════════════════════════════ */
-.kbc-logo {
-  width: 120px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 12px;
+#top-logo-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+  background: rgba(16, 16, 36, 0.92);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  border-bottom: 1px solid rgba(240,192,64,0.2);
 }
 
-.kbc-logo-display {
-  width: 180px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 16px;
-  margin-bottom: 8px;
-}
-
-.kbc-logo-topbar {
-  width: 48px;
-  height: auto;
+.kbc-logo-top {
+  height: 52px;
+  width: auto;
   object-fit: contain;
   border-radius: 8px;
+}
+
+.display-logo-bar {
+  border-bottom: 1px solid rgba(240,192,64,0.3);
+}
+
+.kbc-logo-top-display {
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 /* ══════════════════════════════
@@ -215,7 +226,50 @@ button:disabled { opacity: 0.3; cursor: not-allowed; }
 #host-controls { display: flex; gap: 12px; flex-wrap: wrap; width: 100%; }
 #host-controls button { flex: 1; min-width: 140px; }
 
-/* ── Round Selector (1–6 buttons) ── */
+/* ── Round Adjuster (during game) ── */
+#round-adjuster {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(240,192,64,0.08);
+  border: 1px solid rgba(240,192,64,0.3);
+  border-radius: 10px;
+  padding: 8px 14px;
+  width: 100%;
+}
+
+.adj-label { color: #f0c040; font-size: 0.9rem; font-weight: bold; }
+
+.adj-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.adj-btn {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  font-size: 1.3rem !important;
+  border-radius: 8px !important;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  line-height: 1;
+}
+
+.adj-btn:hover:not(:disabled) { background: rgba(240,192,64,0.3); border-color: #f0c040; }
+.adj-btn:disabled { opacity: 0.3; }
+
+#adj-rounds-val {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* ── Round Selector (1–10 buttons) ── */
 #round-selector-box {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
