@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player QR — KBC FFF</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+    }
+    img.logo  { height: 80px; border-radius: 12px; }
+    h1        { font-size: 1.8rem; color: #f0c040; text-align: center; }
+    .badge    { background: #28a745; color: #fff; border-radius: 20px; padding: 6px 20px; font-size: 1rem; font-weight: bold; }
+    .desc     { color: #aaa; font-size: 1rem; text-align: center; }
+    .qr-wrap  {
+      background: #fff;
+      padding: 16px;
+      border-radius: 20px;
+      border: 4px solid #28a745;
+      box-shadow: 0 0 30px rgba(40,167,69,0.4);
+    }
+    .qr-wrap img { width: 260px; height: 260px; display: block; }
+    .url      { font-size: 0.85rem; color: #888; text-align: center; word-break: break-all; max-width: 300px; }
+    .btn-print {
+      background: #f0c040; color: #1a1a2e;
+      border: none; border-radius: 12px;
+      padding: 14px 36px; font-size: 1.1rem;
+      font-weight: bold; cursor: pointer; margin-top: 8px;
+    }
+    @media print {
+      body { background: #fff !important; }
+      h1, .badge { color: #000 !important; }
+      .desc, .url { color: #555 !important; }
+      .btn-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <img src="kbc.png" alt="KBC Logo" class="logo" />
+  <h1>🎯 KBC Fastest Finger First</h1>
+  <span class="badge">📱 Players</span>
+  <p class="desc">બધા players આ QR scan કરીને join કરો</p>
+  <div class="qr-wrap">
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=000000&bgcolor=ffffff&data=https://devesh1304.github.io/fastest-fingerfirst/"
+      alt="Player QR Code"
+    />
+  </div>
+  <p class="url">https://devesh1304.github.io/fastest-fingerfirst/</p>
+  <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+</body>
+</html>
