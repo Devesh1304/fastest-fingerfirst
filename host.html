@@ -15,9 +15,23 @@
     <button id="btn-load-questions">📊 Load Questions from Sheet</button>
     <p id="load-status" class="muted"></p>
     <div id="load-success" class="hidden">
-      <p>✅ <span id="q-count">0</span> questions loaded
-         (<span id="round-count">0</span> rounds of 5)</p>
-      <button id="btn-go-round1" class="btn-green">🚀 Round 1 શરૂ કરો</button>
+      <p>✅ <span id="q-count">0</span> questions loaded</p>
+
+      <!-- Round selector 1–6 -->
+      <div id="round-selector-box">
+        <p class="selector-label">કેટલા rounds રમવા છે?</p>
+        <div id="round-pick-btns">
+          <button class="round-pick-btn" data-r="1">1</button>
+          <button class="round-pick-btn" data-r="2">2</button>
+          <button class="round-pick-btn" data-r="3">3</button>
+          <button class="round-pick-btn" data-r="4">4</button>
+          <button class="round-pick-btn" data-r="5">5</button>
+          <button class="round-pick-btn" data-r="6">6</button>
+        </div>
+        <p id="round-pick-note" class="muted"></p>
+      </div>
+
+      <button id="btn-go-round1" class="btn-green">🚀 Game શરૂ કરો</button>
     </div>
   </div>
 
@@ -41,10 +55,20 @@
       <div id="submissions-list"></div>
     </div>
 
+    <!-- Main controls -->
     <div id="host-controls">
       <button id="btn-start-round"    class="btn-green">▶ Start Round</button>
-      <button id="btn-reveal-answers" class="btn-blue hidden">✅ Reveal Answers</button>
+      <button id="btn-reveal-answers" class="btn-blue   hidden">✅ Reveal Answers</button>
       <button id="btn-next-round"     class="btn-orange hidden">→ Next Round</button>
+    </div>
+
+    <!-- Error recovery controls -->
+    <div id="host-recovery">
+      <p class="recovery-label">⚙️ Problem આવ્યો?</p>
+      <div id="recovery-btns">
+        <button id="btn-redo-round" class="btn-yellow">🔄 Redo This Round</button>
+        <button id="btn-skip-round" class="btn-gray">⏭ Skip This Round</button>
+      </div>
     </div>
   </div>
 

@@ -190,6 +190,85 @@ button:disabled { opacity: 0.3; cursor: not-allowed; }
 #host-controls { display: flex; gap: 12px; flex-wrap: wrap; width: 100%; }
 #host-controls button { flex: 1; min-width: 140px; }
 
+/* ── Round Selector (1–6 buttons) ── */
+#round-selector-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 14px;
+  width: 100%;
+}
+
+.selector-label {
+  font-size: 0.95rem !important;
+  color: #ccc !important;
+  margin-bottom: 10px;
+}
+
+#round-pick-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.round-pick-btn {
+  width: 48px !important;
+  height: 48px;
+  padding: 0 !important;
+  font-size: 1.2rem !important;
+  border-radius: 10px !important;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+  color: #fff;
+  transition: all 0.15s;
+}
+
+.round-pick-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.round-pick-btn:not(:disabled):hover {
+  border-color: #f0c040;
+  background: rgba(240,192,64,0.15);
+}
+
+/* Selected round button — gold fill */
+.round-pick-btn.round-pick-selected {
+  background: #f0c040 !important;
+  border-color: #f0c040 !important;
+  color: #1a1a2e !important;
+  font-weight: bold;
+}
+
+/* ── Error Recovery Buttons ── */
+#host-recovery {
+  width: 100%;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.recovery-label {
+  font-size: 0.8rem !important;
+  color: #888 !important;
+  margin-bottom: 8px;
+}
+
+#recovery-btns {
+  display: flex;
+  gap: 10px;
+}
+
+#recovery-btns button {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 10px;
+}
+
+.btn-yellow { background: #e0a800; color: #1a1a2e; }
+.btn-gray   { background: #555;    color: #fff;    }
+
 /* ══════════════════════════════
    Display Screen (TV)
 ══════════════════════════════ */

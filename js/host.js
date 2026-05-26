@@ -3,22 +3,42 @@
 // ══════════════════════════════════════════════════════
 
 
-// ── Host state variables ──────────────────────────────
-var _hostRound          = 1;   // current round host is on
-var _hostTotalRounds    = 0;   // total rounds available
-var _hostRoundQuestions = [];  // 5 questions for current round
+// ── Host state ────────────────────────────────────────
+var _hostRound          = 1;    // current round
+var _selectedRounds     = 1;    // how many rounds host chose to play
+var _hostTotalRounds    = 0;    // max rounds available from sheet
+var _hostRoundQuestions = [];   // 5 questions for current round
+var _roundActive        = false; // true after Start Round clicked
 
 
 // ══════════════════════════════════════════════════════
-// On Page Load — attach all button listeners
+// On Page Load
 // ══════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function () {
 
-  document.getElementById('btn-load-questions') .addEventListener('click', hostLoadQuestions);
-  document.getElementById('btn-go-round1')      .addEventListener('click', hostStartGame);
+  // Setup screen
+  document.getElementById('btn-load-questions').addEventListener('click', hostLoadQuestions);
+  document.getElementById('btn-go-round1').addEventListener('click', hostStartGame);
+
+  // Round picker buttons (1–6)
+  document.querySelectorAll('.round-pick-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var r = parseInt(btn.getAttribute('data-r'));
+      if (btn.disabled) return;
+      _selectRounds(r);
+    });
+  });
+
+  // Round control
   document.getElementById('btn-start-round')    .addEventListener('click', hostStartRound);
   document.getElementById('btn-reveal-answers') .addEventListener('click', hostRevealAnswers);
   document.getElementById('btn-next-round')     .addEventListener('click', hostNextRound);
+
+  // Error recovery
+  document.getElementById('btn-redo-round')     .addEventListener('click', hostRedoRound);
+  document.getElementById('btn-skip-round')     .addEventListener('click', hostSkipRound);
+
+  // Game over
   document.getElementById('btn-new-game')       .addEventListener('click', hostNewGame);
 });
 
@@ -30,65 +50,104 @@ async function hostLoadQuestions() {
   var statusEl = document.getElementById('load-status');
   statusEl.textContent = '⏳ Loading questions...';
 
-  var success = await loadQuestions();   // from game.js
+  var success = await loadQuestions();
 
   if (!success) {
     statusEl.textContent = '❌ Failed! Internet check કરો.';
     return;
   }
 
-  _hostTotalRounds = totalRounds;   // totalRounds set by loadQuestions()
-
+  _hostTotalRounds = totalRounds;   // set by loadQuestions() in game.js
   statusEl.textContent = '';
-  document.getElementById('q-count').textContent     = allQuestions.length;
-  document.getElementById('round-count').textContent = _hostTotalRounds;
+
+  document.getElementById('q-count').textContent = allQuestions.length;
   document.getElementById('load-success').classList.remove('hidden');
+
+  // Enable only buttons up to available rounds, disable rest
+  document.querySelectorAll('.round-pick-btn').forEach(function (btn) {
+    var r = parseInt(btn.getAttribute('data-r'));
+    if (r <= _hostTotalRounds) {
+      btn.disabled = false;
+    } else {
+      btn.disabled = true;
+      btn.title    = 'Not enough questions';
+    }
+  });
+
+  // Auto-select max available rounds
+  _selectRounds(_hostTotalRounds);
+
+  document.getElementById('round-pick-note').textContent =
+    '(' + allQuestions.length + ' questions available — max ' + _hostTotalRounds + ' rounds)';
+}
+
+
+// ── Select how many rounds to play ───────────────────
+function _selectRounds(r) {
+  _selectedRounds = r;
+
+  // Highlight selected button
+  document.querySelectorAll('.round-pick-btn').forEach(function (btn) {
+    btn.classList.remove('round-pick-selected');
+    if (parseInt(btn.getAttribute('data-r')) === r) {
+      btn.classList.add('round-pick-selected');
+    }
+  });
 }
 
 
 // ══════════════════════════════════════════════════════
-// STEP 2 — Start Game (clears Firebase, goes to Round 1)
+// STEP 2 — Start Game
 // ══════════════════════════════════════════════════════
 function hostStartGame() {
+  if (!_selectedRounds) {
+    alert('Rounds select કરો!');
+    return;
+  }
 
-  // Clear any old game data in Firebase and set fresh state
+  // Reset Firebase with clean state
   gameRef.set({
     status        : 'waiting',
     currentRound  : 1,
-    totalRounds   : _hostTotalRounds,
+    totalRounds   : _selectedRounds,
     roundStartTime: 0,
     players       : null,
     submissions   : null
   });
 
-  _hostRound = 1;
+  _hostRound    = 1;
+  _roundActive  = false;
   _showHostRoundScreen();
   showScreen('host-round');
 }
 
 
 // ══════════════════════════════════════════════════════
-// STEP 3 — Show Round Preview (questions + correct answers)
+// STEP 3 — Show Round Preview
 // ══════════════════════════════════════════════════════
 function _showHostRoundScreen() {
-  _hostRoundQuestions = getRoundQuestions(_hostRound);  // 5 questions
+  _hostRoundQuestions = getRoundQuestions(_hostRound);
+  _roundActive        = false;
 
-  // Update round counter label
   document.getElementById('host-round-label').textContent =
-    'Round ' + _hostRound + ' of ' + _hostTotalRounds;
+    'Round ' + _hostRound + ' of ' + _selectedRounds;
 
-  // Fill question preview — host can see correct answers!
+  // Fill questions with correct answers visible to host
   _hostRoundQuestions.forEach(function (q, i) {
     document.getElementById('hq-' + i).textContent     = q.question;
     document.getElementById('hq-ans-' + i).textContent = '✅ ' + q.items[q.correct];
   });
 
-  // Reset button states
+  // Reset main controls
   document.getElementById('btn-start-round')   .classList.remove('hidden');
   document.getElementById('btn-reveal-answers').classList.add('hidden');
   document.getElementById('btn-next-round')    .classList.add('hidden');
   document.getElementById('btn-next-round')    .textContent = '→ Next Round';
   document.getElementById('submissions-list')  .innerHTML   = '';
+
+  // Recovery buttons — both visible but redo disabled until round starts
+  document.getElementById('btn-redo-round').disabled = true;
+  document.getElementById('btn-skip-round').disabled = false;
 
   // Live player count
   gameRef.child('players').on('value', function (snap) {
@@ -99,42 +158,43 @@ function _showHostRoundScreen() {
 
 
 // ══════════════════════════════════════════════════════
-// STEP 4 — Start Round (players see questions)
+// STEP 4 — Start Round
 // ══════════════════════════════════════════════════════
 function hostStartRound() {
+  _roundActive = true;
   var startTime = Date.now();
 
-  // Push to Firebase — all players react to status: "active"
   gameRef.update({
     status        : 'active',
     currentRound  : _hostRound,
     roundStartTime: startTime
   });
 
-  // Swap buttons
   document.getElementById('btn-start-round')   .classList.add('hidden');
   document.getElementById('btn-reveal-answers').classList.remove('hidden');
 
-  // Start watching live submissions
+  // Enable redo now that round is live
+  document.getElementById('btn-redo-round').disabled = false;
+
   _watchSubmissions();
 }
 
 
 // ══════════════════════════════════════════════════════
-// STEP 5 — Watch Live Submissions (real-time)
+// STEP 5 — Watch Live Submissions
 // ══════════════════════════════════════════════════════
 function _watchSubmissions() {
   var path = 'submissions/round_' + _hostRound;
 
   gameRef.child(path).on('value', function (snap) {
     var submissions = snap.val() || {};
-    var rows        = buildLeaderboard(submissions);  // from game.js
+    var rows        = buildLeaderboard(submissions);
     var list        = document.getElementById('submissions-list');
 
     list.innerHTML = '';
 
     if (rows.length === 0) {
-      list.innerHTML = '<p class="muted">Submissions ની રાહ જોઈ રહ્યા છીએ...</p>';
+      list.innerHTML = '<p class="muted">Submissions ની રાહ...</p>';
       return;
     }
 
@@ -142,10 +202,10 @@ function _watchSubmissions() {
       var div       = document.createElement('div');
       div.className = 'submission-row';
       div.innerHTML =
-        '<span class="sub-rank">'  + (index + 1)           + '</span>' +
-        '<span class="sub-name">'  + row.name              + '</span>' +
+        '<span class="sub-rank">'  + (index + 1)              + '</span>' +
+        '<span class="sub-name">'  + row.name                 + '</span>' +
         '<span class="sub-time">'  + formatTime(row.timeTaken) + '</span>' +
-        '<span class="sub-score">' + row.score + '/5'      + '</span>';
+        '<span class="sub-score">' + row.score + '/5'         + '</span>';
       list.appendChild(div);
     });
   });
@@ -156,38 +216,33 @@ function _watchSubmissions() {
 // STEP 6 — Reveal Answers
 // ══════════════════════════════════════════════════════
 function hostRevealAnswers() {
-
-  // Tell all players to show correct/wrong
   gameRef.update({ status: 'reveal' });
 
   document.getElementById('btn-reveal-answers').classList.add('hidden');
   document.getElementById('btn-next-round')    .classList.remove('hidden');
 
-  // If this is the last round → change button to "Game Over"
-  if (_hostRound >= _hostTotalRounds) {
+  // Disable recovery after reveal
+  document.getElementById('btn-redo-round').disabled = true;
+  document.getElementById('btn-skip-round').disabled = true;
+
+  if (_hostRound >= _selectedRounds) {
     document.getElementById('btn-next-round').textContent = '🏁 Game Over';
   }
 }
 
 
 // ══════════════════════════════════════════════════════
-// STEP 7 — Next Round OR Game Over
+// STEP 7 — Next Round or Game Over
 // ══════════════════════════════════════════════════════
 function hostNextRound() {
-
-  // Stop watching submissions for this round
   gameRef.child('submissions/round_' + _hostRound).off();
 
-  if (_hostRound >= _hostTotalRounds) {
-    // ── All rounds done → Game Over ──
+  if (_hostRound >= _selectedRounds) {
     _hostGameOver();
     return;
   }
 
-  // ── More rounds left → show leaderboard briefly, then next round ──
   _hostRound++;
-
-  // Show leaderboard to players for 4 seconds, then go to waiting
   gameRef.update({ status: 'leaderboard', currentRound: _hostRound });
 
   setTimeout(function () {
@@ -198,29 +253,80 @@ function hostNextRound() {
 
 
 // ══════════════════════════════════════════════════════
-// STEP 8 — Game Over: combine all rounds into final score
+// ERROR RECOVERY — Redo This Round
+// Clears submissions, resets to waiting, restarts same round
+// ══════════════════════════════════════════════════════
+function hostRedoRound() {
+  var ok = confirm(
+    'Round ' + _hostRound + ' redo કરવો છે?\n' +
+    'બધા submissions clear થઈ જશે.'
+  );
+  if (!ok) return;
+
+  // Stop watching old submissions
+  gameRef.child('submissions/round_' + _hostRound).off();
+
+  // Clear this round's submissions from Firebase
+  gameRef.child('submissions/round_' + _hostRound).remove();
+
+  // Send players back to waiting room
+  gameRef.update({ status: 'waiting' });
+
+  // Re-show same round after short delay
+  setTimeout(function () {
+    _showHostRoundScreen();
+  }, 800);
+}
+
+
+// ══════════════════════════════════════════════════════
+// ERROR RECOVERY — Skip This Round
+// Moves to next round without counting this one
+// ══════════════════════════════════════════════════════
+function hostSkipRound() {
+  var ok = confirm(
+    'Round ' + _hostRound + ' skip કરવો છે?\n' +
+    'આ round ની scores count નહીં થાય.'
+  );
+  if (!ok) return;
+
+  // Stop watching submissions
+  gameRef.child('submissions/round_' + _hostRound).off();
+
+  // Clear this round's data
+  gameRef.child('submissions/round_' + _hostRound).remove();
+
+  if (_hostRound >= _selectedRounds) {
+    _hostGameOver();
+    return;
+  }
+
+  _hostRound++;
+  gameRef.update({ status: 'waiting', currentRound: _hostRound });
+  _showHostRoundScreen();
+}
+
+
+// ══════════════════════════════════════════════════════
+// STEP 8 — Game Over
 // ══════════════════════════════════════════════════════
 function _hostGameOver() {
-
-  // Show leaderboard status to players
   gameRef.update({ status: 'leaderboard' });
-
   showScreen('host-gameover');
 
-  // Fetch all rounds' submissions and combine scores
-  var combined  = {};
-  var fetches   = [];
+  // Combine scores from all rounds
+  var combined = {};
+  var fetches  = [];
 
-  for (var r = 1; r <= _hostTotalRounds; r++) {
+  for (var r = 1; r <= _selectedRounds; r++) {
     fetches.push(gameRef.child('submissions/round_' + r).once('value'));
   }
 
   Promise.all(fetches).then(function (snaps) {
     snaps.forEach(function (snap) {
-      var roundData = snap.val() || {};
-
-      Object.keys(roundData).forEach(function (uid) {
-        var s = roundData[uid];
+      var data = snap.val() || {};
+      Object.keys(data).forEach(function (uid) {
+        var s = data[uid];
         if (!combined[uid]) {
           combined[uid] = { name: s.name, score: 0, timeTaken: 0 };
         }
@@ -236,19 +342,20 @@ function _hostGameOver() {
 
 
 // ══════════════════════════════════════════════════════
-// STEP 9 — New Game (restart everything)
+// STEP 9 — New Game
 // ══════════════════════════════════════════════════════
 function hostNewGame() {
   gameRef.set({
     status        : 'waiting',
     currentRound  : 1,
-    totalRounds   : _hostTotalRounds,
+    totalRounds   : _selectedRounds,
     roundStartTime: 0,
     players       : null,
     submissions   : null
   });
 
-  _hostRound = 1;
+  _hostRound   = 1;
+  _roundActive = false;
   _showHostRoundScreen();
   showScreen('host-round');
 }
