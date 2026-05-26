@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KBC FFF — QR Codes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      gap: 30px;
+    }
+
+    .page-header {
+      text-align: center;
+    }
+
+    .page-header img {
+      height: 70px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .page-header h1 {
+      font-size: 1.8rem;
+      color: #f0c040;
+    }
+
+    .page-header p {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    /* QR Cards grid */
+    .qr-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .qr-card {
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 260px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .qr-card:hover { border-color: #f0c040; }
+
+    .qr-card.player  { border-color: #28a745; }
+    .qr-card.host    { border-color: #007bff; }
+    .qr-card.display { border-color: #fd7e14; }
+
+    .qr-icon   { font-size: 2rem; }
+    .qr-title  { font-size: 1.2rem; font-weight: bold; color: #f0c040; }
+    .qr-desc   { font-size: 0.85rem; color: #aaa; }
+
+    .qr-card img {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .qr-url {
+      font-size: 0.72rem;
+      color: #888;
+      word-break: break-all;
+      max-width: 220px;
+    }
+
+    .qr-label {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .qr-card.player  .qr-label { background: #28a745; color: #fff; }
+    .qr-card.host    .qr-label { background: #007bff; color: #fff; }
+    .qr-card.display .qr-label { background: #fd7e14; color: #fff; }
+
+    /* Print button */
+    .btn-print {
+      background: #f0c040;
+      color: #1a1a2e;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-print:hover { background: #e0b030; }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 20px;
+      }
+      .page-header h1, .qr-title { color: #000 !important; }
+      .qr-card { border: 2px solid #ccc !important; background: #fff !important; }
+      .qr-desc, .qr-url { color: #555 !important; }
+      .qr-label { filter: grayscale(0.3); }
+      .btn-print { display: none; }
+      .page-header p { color: #555 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <img src="kbc.png" alt="KBC Logo" />
+    <h1>🎯 KBC Fastest Finger First</h1>
+    <p>Phone ઉઠાવો, QR scan કરો, Game join કરો!</p>
+  </div>
+
+  <div class="qr-grid">
+
+    <!-- Player QR -->
+    <div class="qr-card player">
+      <span class="qr-icon">📱</span>
+      <span class="qr-label">Players</span>
+      <p class="qr-title">Player Screen</p>
+      <p class="qr-desc">બધા players આ QR scan કરો</p>
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=000000&bgcolor=ffffff&data=https://devesh1304.github.io/fastest-fingerfirst/"
+        alt="Player QR Code"
+      />
+      <p class="qr-url">devesh1304.github.io/fastest-fingerfirst/</p>
+    </div>
+
+    <!-- Host QR -->
+    <div class="qr-card host">
+      <span class="qr-icon">🎮</span>
+      <span class="qr-label">Host Only</span>
+      <p class="qr-title">Host Controls</p>
+      <p class="qr-desc">માત્ર Host / Master માટે</p>
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=000000&bgcolor=ffffff&data=https://devesh1304.github.io/fastest-fingerfirst/host.html"
+        alt="Host QR Code"
+      />
+      <p class="qr-url">devesh1304.github.io/fastest-fingerfirst/host.html</p>
+    </div>
+
+    <!-- Display QR -->
+    <div class="qr-card display">
+      <span class="qr-icon">📺</span>
+      <span class="qr-label">TV / Projector</span>
+      <p class="qr-title">Display Screen</p>
+      <p class="qr-desc">TV / Projector પર ખોલો</p>
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=000000&bgcolor=ffffff&data=https://devesh1304.github.io/fastest-fingerfirst/display.html"
+        alt="Display QR Code"
+      />
+      <p class="qr-url">devesh1304.github.io/fastest-fingerfirst/display.html</p>
+    </div>
+
+  </div>
+
+  <button class="btn-print" onclick="window.print()">🖨️ Print QR Codes</button>
+
+</body>
+</html>
