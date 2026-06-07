@@ -120,9 +120,11 @@ function renderLeaderboard(containerId, rows) {
 
   rows.forEach(function(row, index) {
     var div = document.createElement('div');
-    div.className = 'lb-row';
+    var medal = index === 0 ? '🥇' : index === 1 ? '🥈' : (index + 1);
+    div.className = 'lb-row' +
+      (index === 0 ? ' lb-rank-1' : index === 1 ? ' lb-rank-2' : '');
     div.innerHTML =
-      '<span class="lb-rank">' + (index + 1) + '</span>' +
+      '<span class="lb-rank">' + medal + '</span>' +
       '<span class="lb-name">' + row.name + '</span>' +
       '<span class="lb-score">' + row.score + '/5</span>' +
       '<span class="lb-time">'  + formatTime(row.timeTaken) + '</span>';

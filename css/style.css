@@ -183,8 +183,18 @@ button:disabled { opacity: 0.3; cursor: not-allowed; }
   display: flex; justify-content: space-between; align-items: center;
   background: rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 16px; font-size: 1rem;
 }
-.lb-row:first-child { background: rgba(240,192,64,0.15); border: 1px solid #f0c040; }
-.lb-rank  { color: #f0c040; font-weight: bold; min-width: 30px; }
+/* 🥇 1st place — gold */
+.lb-row.lb-rank-1 {
+  background: rgba(240,192,64,0.18);
+  border: 2px solid #f0c040;
+  font-size: 1.08rem;
+}
+/* 🥈 2nd place — silver */
+.lb-row.lb-rank-2 {
+  background: rgba(192,192,192,0.12);
+  border: 2px solid #b0b0b0;
+}
+.lb-rank  { color: #f0c040; font-weight: bold; min-width: 34px; font-size: 1.2rem; }
 .lb-name  { flex: 1; text-align: left; padding-left: 10px; }
 .lb-score { color: #28a745; font-weight: bold; }
 .lb-time  { color: #888; font-size: 0.8rem; margin-left: 10px; }
@@ -378,9 +388,43 @@ button:disabled { opacity: 0.3; cursor: not-allowed; }
 }
 
 #disp-winner-box {
-  background: rgba(240,192,64,0.1); border: 2px solid #f0c040;
+  background: rgba(240,192,64,0.08); border: 2px solid #f0c040;
   border-radius: 16px; padding: 24px; text-align: center; width: 100%;
 }
-.winner-label { color: #aaa; font-size: 1rem; margin-bottom: 8px; }
-.winner-name  { font-size: 2.5rem !important; color: #f0c040 !important; font-weight: bold; }
-.winner-score { font-size: 1.2rem !important; color: #28a745 !important; margin-top: 6px; }
+.winner-label { color: #aaa; font-size: 1rem; margin-bottom: 14px; }
+
+/* Two winner cards side by side */
+#disp-top2 {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.winner-card {
+  flex: 1;
+  min-width: 220px;
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+/* 🥇 Gold card */
+.winner-gold {
+  background: rgba(240,192,64,0.18);
+  border: 3px solid #f0c040;
+  box-shadow: 0 0 24px rgba(240,192,64,0.3);
+}
+
+/* 🥈 Silver card */
+.winner-silver {
+  background: rgba(192,192,192,0.1);
+  border: 3px solid #b0b0b0;
+  box-shadow: 0 0 16px rgba(192,192,192,0.2);
+}
+
+.winner-medal  { font-size: 2.6rem; display: block; margin-bottom: 8px; }
+.winner-name   { font-size: 2rem !important;   color: #f0c040 !important; font-weight: bold; margin: 0; }
+.winner-name-2 { font-size: 1.7rem !important; color: #c8c8c8 !important; font-weight: bold; margin: 0; }
+.winner-score  { font-size: 1rem !important;   color: #28a745 !important; margin-top: 6px; }
+.winner-score-2{ font-size: 1rem !important;   color: #aaa    !important; margin-top: 6px; }

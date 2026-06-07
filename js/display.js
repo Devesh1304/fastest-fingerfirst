@@ -151,19 +151,30 @@ function _dispShowReveal() {
 
   showScreen('disp-reveal');
 
-  // Find the winner (fastest + most correct)
+  // Find top 2 (fastest + most correct)
   gameRef.child('submissions/round_' + _dispRound)
     .once('value', function (snap) {
       var rows = buildLeaderboard(snap.val() || {});
 
+      // — 1st place —
       if (rows.length > 0) {
-        var winner = rows[0];
-        document.getElementById('disp-winner-name').textContent  = winner.name;
-        document.getElementById('disp-winner-score').textContent =
-          winner.score + '/5 સાચા  |  ' + formatTime(winner.timeTaken);
+        document.getElementById('disp-winner1-name').textContent  = rows[0].name;
+        document.getElementById('disp-winner1-score').textContent =
+          rows[0].score + '/5  |  ' + formatTime(rows[0].timeTaken);
       } else {
-        document.getElementById('disp-winner-name').textContent  = 'કોઈ નહીં 😅';
-        document.getElementById('disp-winner-score').textContent = '';
+        document.getElementById('disp-winner1-name').textContent  = 'કોઈ નહીં 😅';
+        document.getElementById('disp-winner1-score').textContent = '';
+      }
+
+      // — 2nd place —
+      var card2 = document.getElementById('disp-winner2-card');
+      if (rows.length > 1) {
+        document.getElementById('disp-winner2-name').textContent  = rows[1].name;
+        document.getElementById('disp-winner2-score').textContent =
+          rows[1].score + '/5  |  ' + formatTime(rows[1].timeTaken);
+        card2.style.display = '';
+      } else {
+        card2.style.display = 'none';   // hide if only 1 player
       }
     });
 }
